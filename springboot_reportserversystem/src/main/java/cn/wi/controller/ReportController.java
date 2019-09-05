@@ -31,8 +31,8 @@ public class ReportController {
      * 注解注入  获取Bean对象
      */
     @Autowired
-    //KafkaTemplate<String, String> kafkaTemplate;
-            KafkaTemplate kafkaTemplate;
+    KafkaTemplate<String, String> kafkaTemplate;
+    //KafkaTemplate kafkaTemplate;
 
     /**
      * @param string              输入的内容

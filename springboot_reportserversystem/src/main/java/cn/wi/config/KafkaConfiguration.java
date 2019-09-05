@@ -1,11 +1,11 @@
 package cn.wi.config;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
-import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
@@ -45,7 +45,7 @@ public class KafkaConfiguration {
     @Bean
     public KafkaTemplate kafkaTemplate() {
         //添加kafka配置
-        HashMap<String, Object> map = new HashMap<String,Object>(16);
+        HashMap<String, Object> map = new HashMap<String, Object>(16);
         //broker地址
         map.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, severs);
         map.put(ProducerConfig.RETRIES_CONFIG, retries);
@@ -53,10 +53,16 @@ public class KafkaConfiguration {
         map.put(ProducerConfig.LINGER_MS_CONFIG, linger);
         map.put(ProducerConfig.BUFFER_MEMORY_CONFIG, memory);
 
-        //需要
+        //需要配置KV的序列化
+        map.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        map.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+
+        //避免数据倾斜
+        //算法RoundRobin 轮询的算法    RoundRobinPartition 实现轮询算法的类
+        map.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, RoundRobinPartition.class);
 
         //kafka核心配置对象  DefaultKafkaConsumerFactory 需要一个Map的参数
-        //DefaultKafkaProducerFactory实现了ProducerFactory接口
+        // DefaultKafkaProducerFactory实现了ProducerFactory接口
         ProducerFactory kafkaProducerFactory = new DefaultKafkaProducerFactory(map);
         KafkaTemplate<String, String> kafkaTemplate = new KafkaTemplate<String, String>(kafkaProducerFactory);
         return kafkaTemplate;
