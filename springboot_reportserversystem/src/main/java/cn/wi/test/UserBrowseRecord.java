@@ -72,22 +72,22 @@ public class UserBrowseRecord {
     /**
      * 获取时间
      */
-    final static int NUMBER = 100;
+    private final static int NUMBER = 100;
 
-    public static List<Long[]> produceTimes() {
+    private static List<Long[]> produceTimes() {
         List<Long[]> useTimeLog = new ArrayList<Long[]>();
         for (int i = 0; i < NUMBER; i++) {
-            Long[] timesArray = getTimes("2018-12-12 24:60:60:000");
+            Long[] timesArray = getTimes();
             useTimeLog.add(timesArray);
         }
         return useTimeLog;
     }
 
 
-    private static Long[] getTimes(String time) {
+    private static Long[] getTimes() {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss:SSS");
         try {
-            Date date = dateFormat.parse(time);
+            Date date = dateFormat.parse("2018-12-12 24:60:60:000");
 
             long timeTemp = date.getTime();
             Random random = new Random();
