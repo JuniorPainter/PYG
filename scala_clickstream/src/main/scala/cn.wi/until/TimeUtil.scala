@@ -16,7 +16,7 @@ object TimeUtil {
   /**
    *
    * @param timeStamp Long类型的时间：包含时分秒
-   * @param format 格式化模板
+   * @param format    格式化模板
    * @return 字符串格式的时间
    */
   def parseTime(timeStamp: Long, format: String): String = {
