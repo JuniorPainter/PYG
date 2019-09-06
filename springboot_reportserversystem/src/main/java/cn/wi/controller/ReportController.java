@@ -50,7 +50,7 @@ public class ReportController {
 
         //获取kafka实例   发送数据到kafka
         //第一个参数topic
-        kafkaTemplate.send("pyg", "test", jsonString);
+        kafkaTemplate.send("pygTopic", "test", jsonString);
 
         //发送的响应状态给前端用户/或者是访问接口
         PrintWriter printWriter = printWriter(httpServletResponse);

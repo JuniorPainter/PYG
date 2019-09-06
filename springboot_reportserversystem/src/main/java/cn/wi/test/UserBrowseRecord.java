@@ -120,7 +120,7 @@ public class UserBrowseRecord {
             userBrowse.setBrowserType(Browser[random.nextInt(Browser.length)]);
 
             //new Date().getTime
-            userBrowse.setTimestamp(System.currentTimeMillis());
+            userBrowse.setTimeStamp(System.currentTimeMillis());
 
             Long[] times = useTimeLog.get(random.nextInt(useTimeLog.size()));
             Long tme = times[0];

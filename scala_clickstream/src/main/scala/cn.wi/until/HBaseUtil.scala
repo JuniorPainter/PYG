@@ -74,16 +74,21 @@ object HBaseUtil {
     //初始化表
     val table: Table = initTable(tableName, family)
     var string = ""
-    val get: Get = new Get(rowKey.getBytes())
-    val result: Result = table.get(get)
+    try {
+      val get: Get = new Get(rowKey.getBytes())
+      val result: Result = table.get(get)
 
-    val bytes: Array[Byte] = result.getValue(family.getBytes(), columnName.getBytes())
+      val bytes: Array[Byte] = result.getValue(family.getBytes(), columnName.getBytes())
 
-    if (bytes != null && bytes.length > 0) {
-      string = new String(bytes)
+      if (bytes != null && bytes.length > 0) {
+        string = new String(bytes)
+      }
+
+    } catch {
+      case e: Exception => e.printStackTrace()
+    } finally {
+      table.close()
     }
-
-    table.close()
     string
   }
 
@@ -99,10 +104,17 @@ object HBaseUtil {
   def putDataByRowKey(tableName: String, family: String, columnName: String, columnValue: String, rowKey: String): Unit = {
     //初始化表
     val table: Table = initTable(tableName, family)
-    val put: Put = new Put(rowKey.getBytes())
-    put.addColumn(family.getBytes(), columnName.getBytes(), columnValue.getBytes())
-    table.put(put)
-    table.close()
+    try {
+      val put: Put = new Put(rowKey.getBytes())
+      put.addColumn(family.getBytes(), columnName.getBytes(), columnValue.getBytes())
+      table.put(put)
+    } catch {
+      case e: Exception => e.printStackTrace()
+    } finally {
+      table.close()
+    }
+
+
   }
 
   /**
@@ -110,18 +122,24 @@ object HBaseUtil {
    *
    * @param tableName 表名
    * @param family    列族
-   * @param map
+   * @param map       K是列名 V是列值
    * @param rowKey    rowKey
    */
   def putMapDataByRowKey(tableName: String, family: String, map: Map[String, Any], rowKey: String): Unit = {
     //初始化表
     val table: Table = initTable(tableName, family)
-    val put: Put = new Put(rowKey.getBytes())
-    for ((x, y) <- map) {
-      put.addColumn(family.getBytes(), x.getBytes(), y.toString.getBytes())
+    try {
+      val put: Put = new Put(rowKey.getBytes())
+      for ((x, y) <- map) {
+        //x 是列名   y 是列值 是Any类型 所以要先转成字符串 再转成字节
+        put.addColumn(family.getBytes(), x.getBytes(), y.toString.getBytes())
+      }
+      table.put(put)
+    } catch {
+      case e: Exception => e.printStackTrace()
+    } finally {
+      table.close()
     }
-    table.put(put)
-    table.close()
   }
 
   /**
@@ -134,45 +152,50 @@ object HBaseUtil {
   def deleteByRowKey(tableName: String, family: String, rowKey: String): Unit = {
     //初始化表
     val table: Table = initTable(tableName, family)
-    val delete: Delete = new Delete(rowKey.getBytes())
-    table.delete(delete)
-    table.close()
+    try {
+      val delete: Delete = new Delete(rowKey.getBytes())
+      table.delete(delete)
+    } catch {
+      case e: Exception => e.printStackTrace()
+    } finally {
+      table.close()
+    }
   }
 
   /**
    * 增删改查测试
-   *
    */
+
   def main(args: Array[String]): Unit = {
     //插入单列数据
-    putDataByRowKey(
-      "pyg",
-      "info",
-      "column",
-      "11",
-      "001")
+//    putDataByRowKey(
+//      "pyg",
+//      "info",
+//      "column",
+//      "11",
+//      "001")
 
     //查询001的数据
-    val result: String = queryByRowKey(
-      "pyg",
-      "info",
-      "column",
-      "001")
-    println(result)
+        val result: String = queryByRowKey(
+          "pyg",
+          "info",
+          "column",
+          "001")
+        println(result)
 
     //插入多列数据
-    val map: Map[String, Int] = Map("a" -> 1, "b" -> 2)
-    putMapDataByRowKey(
-      "pyg",
-      "info",
-      map,
-      "002")
+    //    val map: Map[String, Int] = Map("a" -> 1, "b" -> 2)
+    //    putMapDataByRowKey(
+    //      "pyg",
+    //      "info",
+    //      map,
+    //      "002")
 
     //根据RowKey删除数据
-    deleteByRowKey(
-      "pyg",
-      "info",
-      "001")
+        deleteByRowKey(
+          "pyg",
+          "info",
+          "001")
   }
 
 }

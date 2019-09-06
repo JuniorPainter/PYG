@@ -71,7 +71,7 @@ public class UserBrowse {
     /**
      * 日志产生时间
      */
-    private long timestamp;
+    private long timeStamp;
 
     public long getChannelId() {
         return channelId;
@@ -169,12 +169,12 @@ public class UserBrowse {
         this.userId = userId;
     }
 
-    public long getTimestamp() {
-        return timestamp;
+    public long getTimeStamp() {
+        return timeStamp;
     }
 
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
+    public void setTimeStamp(long timeStamp) {
+        this.timeStamp = timeStamp;
     }
 
     @Override
@@ -192,7 +192,7 @@ public class UserBrowse {
                 ", entryTime=" + entryTime +
                 ", leaveTime=" + leaveTime +
                 ", userId=" + userId +
-                ", timestamp=" + timestamp +
+                ", timeStamp=" + timeStamp +
                 '}';
     }
 }
