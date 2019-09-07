@@ -2,7 +2,7 @@ import java.util.Properties
 
 import cn.wi.config.GlobalConfig
 import cn.wi.pojo.{Message, UserBrowse}
-import cn.wi.task.{ChannelHotTask, ChannelPvUvTask}
+import cn.wi.task.{ChannelBrowseTask, ChannelFreshnessTask, ChannelHotTask, ChannelNetworkTask, ChannelPvUvTask, ChannelRegionTask}
 import com.alibaba.fastjson.{JSON, JSONObject}
 import org.apache.flink.api.common.serialization.SimpleStringSchema
 import org.apache.flink.runtime.state.filesystem.FsStateBackend
@@ -120,7 +120,19 @@ object AppStream {
     //ChannelHotTask.process(waterTimeDS)
 
     //实时频道的PVUv分析
-    ChannelPvUvTask.process(waterTimeDS)
+    //ChannelPvUvTask.process(waterTimeDS)
+
+    //实时频道的用户新鲜度
+    //ChannelFreshnessTask.process(waterTimeDS)
+
+    //实时频道的地域分析
+    //ChannelRegionTask.process(waterTimeDS)
+
+    //实时频道的网络类型分析
+    //ChannelNetworkTask.process(waterTimeDS)
+
+    //实时频道的浏览器分析
+    ChannelBrowseTask.process(waterTimeDS)
 
     //触发执行
     environment.execute()
